@@ -12,6 +12,7 @@ const User = sequelize.define('bot', {
         primaryKey: true,
         autoIncrement: true
     },
+    tg_id: DataTypes.STRING,
     username: DataTypes.STRING,
     phone: DataTypes.STRING,
 }, {timestamps: true})

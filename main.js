@@ -88,7 +88,7 @@ bot.start((ctx) => {
 })
 
 bot.on('contact', async(ctx) => {
-  await User.create({phone: ctx.message.contact.phone_number, username: ctx.message.from.username, time: new Date()})
+  await User.create({phone: ctx.message.contact.phone_number,tg_id: ctx.from.id, username: ctx.message.from.username, time: new Date()})
   ctx.reply(`Siz asosiy menudasiz`, Markup.keyboard([
     [Markup.button.callback('Buyurtma')], [Markup.button.callback('Yordam')],
   ]).resize())
@@ -102,18 +102,21 @@ bot.command('admin', async (ctx) => {
           return ctx.reply("❌ Hech qanday foydalanuvchi topilmadi.");
       }
 
-      let message = "📋 *Foydalanuvchilar ro‘yxati:* \n\n";
+      let message = "📋 Foydalanuvchilar ro‘yxati: \n\n";
       users.forEach((user, index) => {
-          message += `👤 *#${index + 1}*\n`;
-          message += `🆔 ID: \`${user.id}\`\n`;
-          message += `👤 Username: ${user.username ? `@${user.username}` : "Noma’lum"}\n`;
-          message += `📞 Telefon: \`${user.phone}\`\n`;
+          const username = user.username ? `@${user.username}` : "Noma’lum";
+          message += `👤 #${index + 1}\n`;
+          message += `🆔 ID: ${user.tg_id}\n`;
+          message += `👤 Username: ${username}\n`;
+          message += `📞 Telefon: ${user.phone}\n`;
           message += `📅 Qo‘shilgan vaqti: ${new Date(user.createdAt).toLocaleString("uz-UZ")}\n`;
           message += `----------------------\n`;
       });
-      ctx.replyWithMarkdown(message);
+
+      ctx.reply(message);
   }
 });
+
 
 
 
