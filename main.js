@@ -1,4 +1,4 @@
-const {Telegraf, Markup} = require('telegraf');
+const {Telegraf, Markup, replyWithMarkdown} = require('telegraf');
 const {User, connect} = require("./model")
 let token = '7809580387:AAEwUVXSKT3pECY3vyYrzl3Tq1O_RSMdSco'
 let channels = ['@rumiyy_daxoo','@nakrutkachi_okaaa' ]
@@ -94,16 +94,27 @@ bot.on('contact', async(ctx) => {
   ]).resize())
 })
 
-bot.command('admin', async(ctx) => {
-  if(ctx.message.from.id == ADMIN_ID ||ctx.message.from.id == ADMIN_ID2 ){
-    const data = await User.findAll()
-    console.log(data);
-    
-    ctx.reply(JSON.stringify(data))
-  }
-  
+bot.command('admin', async (ctx) => {
+  if (ctx.message.from.id == ADMIN_ID || ctx.message.from.id == ADMIN_ID2) {
+      const users = await User.findAll();
 
-})
+      if (users.length === 0) {
+          return ctx.reply("❌ Hech qanday foydalanuvchi topilmadi.");
+      }
+
+      let message = "📋 *Foydalanuvchilar ro‘yxati:* \n\n";
+      users.forEach((user, index) => {
+          message += `👤 *#${index + 1}*\n`;
+          message += `🆔 ID: \`${user.id}\`\n`;
+          message += `👤 Username: ${user.username ? `@${user.username}` : "Noma’lum"}\n`;
+          message += `📞 Telefon: \`${user.phone}\`\n`;
+          message += `📅 Qo‘shilgan vaqti: ${new Date(user.createdAt).toLocaleString("uz-UZ")}\n`;
+          message += `----------------------\n`;
+      });
+      ctx.replyWithMarkdown(message);
+  }
+});
+
 
 
 
