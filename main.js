@@ -150,7 +150,9 @@ bot.hears('Tolov uchun karta💳', (ctx) => {
 
 To'lov cheksiz qabul qilinmaydi❗️📄
 
-Iltimos to'lov qilganizdan so'ng qaysi xitmat kerakligini birdaniga yozib keting. ❗️`)
+To'lov qilgandan keyin chekni botga yuboring. ❗️
+
+Iltimos to'lov qilganizdan so'ng qaysi xizmat kerakligini birdaniga yozib keting. ❗️`)
 })
 
 bot.hears('Orqaga🔙', (ctx) => {
