@@ -1,7 +1,7 @@
 const {Telegraf, Markup, replyWithMarkdown} = require('telegraf');
 const {User, connect} = require("./model")
 let token = '7809580387:AAEwUVXSKT3pECY3vyYrzl3Tq1O_RSMdSco'
-let channels = ['@rumiyy_daxoo','@nakrutkachi_okaaa' ]
+let channels = ['@rumiyy_daxoo', '@nakrutkachi_bolaaa' ]
 const bot = new Telegraf(token);
 const ADMIN_ID = 7559868170;
 const ADMIN_ID2 = 5740402591;
@@ -12,16 +12,21 @@ connect()
 async function checkSubscription(userId) {
   let notSubscribed = [];
 
-  for (const channel of channels) {
-    try {
-      const member = await bot.telegram.getChatMember(channel, userId);
-      if (!['member', 'administrator', 'creator'].includes(member.status)) {
+  try {
+    for (const channel of channels) {
+      try {
+        const member = await bot.telegram.getChatMember(channel, userId);
+        if (!['member', 'administrator', 'creator'].includes(member.status)) {
+          notSubscribed.push(channel);
+        }
+      } catch (error) {
+        console.error(`Kanalga ulanishda xatolik: ${channel}`, error);
         notSubscribed.push(channel);
       }
-    } catch (error) {
-      console.error(`Kanalga ulanishda xatolik: ${channel}`, error);
-      notSubscribed.push(channel);
     }
+  } catch (error) {
+    console.log(error);
+    ctx.reply("Xatolik yuz berdi iltimos keyinroq urining!")
   }
 
   return notSubscribed;
@@ -30,6 +35,8 @@ async function checkSubscription(userId) {
 
 bot.use(async (ctx, next) => {
   try {
+    console.log(ctx.from.id);
+    
     const userId = ctx.from.id;
     let notSubscribed = [];
 
@@ -46,7 +53,7 @@ bot.use(async (ctx, next) => {
       return ctx.reply(
         '⚠️ Botdan foydalanish uchun quyidagi kanallarga obuna bo‘ling va « ✅ Tasdiqlash » tugmasini bosing!',
         Markup.inlineKeyboard([
-          [Markup.button.url('Obuna bo‘lish', `https://t.me/nakrutkachi_okaaa`)],
+          [Markup.button.url('Obuna bo‘lish', `https://t.me/nakrutkachi_bolaaa`)],
           [Markup.button.url('Obuna bo‘lish', `https://t.me/rumiyy_daxoo`)],
           [Markup.button.callback('Tasdiqlash✅', 'try')]
         ])
@@ -65,7 +72,7 @@ bot.action('try', async (ctx) => {
 
     if (notSubscribed.length === 0) {
       await ctx.answerCbQuery();
-      await ctx.deleteMessage(); // Tugmani o‘chirish
+      await ctx.deleteMessage(); 
       // return ctx.reply('✅ Siz kanalga obuna bo‘lgansiz! Endi botdan foydalanishingiz mumkin.');
       ctx.reply('Telefon raqamingizni yuboring', Markup.keyboard([
         [Markup.button.contactRequest('Telefon raqamni yuborish')]
@@ -80,22 +87,31 @@ bot.action('try', async (ctx) => {
 });
 
 bot.start((ctx) => {
-  ctx.reply('Telefon raqamingizni yuboring', Markup.keyboard([
-    [Markup.button.contactRequest('Telefon raqamni yuborish')]
-  ]).resize().oneTime())
-  
-  
+  try {
+    ctx.reply('Telefon raqamingizni yuboring', Markup.keyboard([
+      [Markup.button.contactRequest('Telefon raqamni yuborish')]
+    ]).resize().oneTime())
+  } catch (error) {
+    console.log(error);
+    ctx.reply("Xatolik yuz berdi iltimos keyinroq urining!")
+  }
 })
 
 bot.on('contact', async(ctx) => {
-  await User.create({phone: ctx.message.contact.phone_number,tg_id: ctx.from.id, username: ctx.message.from.username, time: new Date()})
+  try {
+    await User.create({phone: ctx.message.contact.phone_number,tg_id: ctx.from.id, username: ctx.message.from.username, time: new Date()})
   ctx.reply(`Siz asosiy menudasiz`, Markup.keyboard([
     [Markup.button.callback('Buyurtma')], [Markup.button.callback('Yordam')],
   ]).resize())
+  } catch (error) {
+    console.log(error);
+    ctx.reply("Xatolik yuz berdi iltimos keyinroq urining!")
+  }
 })
 
 bot.command('admin', async (ctx) => {
-  if (ctx.message.from.id == ADMIN_ID || ctx.message.from.id == ADMIN_ID2) {
+  try {
+    if (ctx.message.from.id == ADMIN_ID || ctx.message.from.id == ADMIN_ID2) {
       const users = await User.findAll();
 
       if (users.length === 0) {
@@ -115,32 +131,37 @@ bot.command('admin', async (ctx) => {
 
       ctx.reply(message);
   }
+  } catch (error) {
+    console.log(error);
+    ctx.reply("Xatolik yuz berdi iltimos keyinroq urining!")
+  }
 });
 
 
 
-
-
-
-
 bot.hears('Yordam', (ctx) => {
-  ctx.reply(`❕ Sizga yordam kerakmi ?
+  try {
+    ctx.reply(`❕ Sizga yordam kerakmi ?
 
-☎️ Qo'llab quvvatlash xizmati orqali bot haqidagi istalgan savolingizga javob topishingiz olishingiz mumkin!`, Markup.inlineKeyboard([
-  [Markup.button.url('☎️ Qollab-Quvvatlash', 'https://t.me/xojiakbar2270')]
-]))
+      ☎️ Qo'llab quvvatlash xizmati orqali bot haqidagi istalgan savolingizga javob topishingiz olishingiz mumkin!`, Markup.inlineKeyboard([
+        [Markup.button.url('☎️ Qollab-Quvvatlash', 'https://t.me/xojiakbar2270')]
+      ]))
+  } catch (error) {
+    console.log(error);
+    ctx.reply("Xatolik yuz berdi iltimos keyinroq urining!")
+  }
 })
 
 
-
-
-
-
-
 bot.hears('Buyurtma', (ctx) => {
-  ctx.reply(`Xizmatlardan keraklisini tanlang`, Markup.keyboard([
-    [Markup.button.callback('Instagram'), Markup.button.callback('Telegram')], [Markup.button.callback('Youtube'), Markup.button.callback('Tolov uchun karta💳')], [ Markup.button.callback('Orqaga🔙')],
-  ]).resize())
+  try {
+    ctx.reply(`Xizmatlardan keraklisini tanlang`, Markup.keyboard([
+      [Markup.button.callback('Instagram'), Markup.button.callback('Telegram')], [Markup.button.callback('Youtube'), Markup.button.callback('Tolov uchun karta💳')], [ Markup.button.callback('Orqaga🔙')],
+    ]).resize())
+  } catch (error) {
+    console.log(error);
+    ctx.reply("Xatolik yuz berdi iltimos keyinroq urining!")
+  }
 })
 
 bot.hears('Tolov uchun karta💳', (ctx) => {
@@ -156,9 +177,14 @@ Iltimos to'lov qilganizdan so'ng qaysi xizmat kerakligini birdaniga yozib keting
 })
 
 bot.hears('Orqaga🔙', (ctx) => {
-  ctx.reply(`Siz asosiy menudasiz`, Markup.keyboard([
-    [Markup.button.callback('Buyurtma')], [Markup.button.callback('Yordam')],
-  ]).resize())
+  try {
+    ctx.reply(`Siz asosiy menudasiz`, Markup.keyboard([
+      [Markup.button.callback('Buyurtma')], [Markup.button.callback('Yordam')],
+    ]).resize())
+  } catch (error) {
+    console.log(error);
+    ctx.reply("Xatolik yuz berdi iltimos keyinroq urining!")
+  }
 })
 bot.hears('Telegram', (ctx) => {
   ctx.reply(`⚡️Sizga  tezlik  bilan  obunachi  qo'shib  berishda  yordam  beraman.Eslatib o'tamiz  bularning hammasi  "NAKRUTKA" !!
