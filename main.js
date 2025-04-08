@@ -1,7 +1,7 @@
 const {Telegraf, Markup, replyWithMarkdown} = require('telegraf');
 const {User, connect} = require("./model")
 let token = '7809580387:AAEwUVXSKT3pECY3vyYrzl3Tq1O_RSMdSco'
-let channels = ['@rumiyy_daxoo', '@nakrutkachi_bolaaa' ]
+let channels = ['@bilganingda_edi', '@nakrutkachi_bolaaa' ]
 const bot = new Telegraf(token);
 const ADMIN_ID = 7559868170;
 const ADMIN_ID2 = 5740402591;
