@@ -54,7 +54,7 @@ bot.use(async (ctx, next) => {
         '⚠️ Botdan foydalanish uchun quyidagi kanallarga obuna bo‘ling va « ✅ Tasdiqlash » tugmasini bosing!',
         Markup.inlineKeyboard([
           [Markup.button.url('Obuna bo‘lish', `https://t.me/nakrutkachi_bolaaa`)],
-          [Markup.button.url('Obuna bo‘lish', `https://t.me/rumiyy_daxoo`)],
+          [Markup.button.url('Obuna bo‘lish', `https://t.me/bilganingda_edi`)],
           [Markup.button.callback('Tasdiqlash✅', 'try')]
         ])
       );
